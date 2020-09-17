@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+	<script>
+
+		window.addEventListener('load', init);
+
+		const file = 'sounds/bgm_maoudamashii_healing15.mp3';
+		let id;
+		let instance;
+		let control;
+
+		function init() {
+			createjs.Sound.on('fileload', musicPre);
+			createjs.Sound.registerSound(file);
+			control = document.getElementById('control');
+		}
+
+		function musicPre(e) {
+			id = e.src;
+			control.value = '再生';
+			control.onclick = startSound;
+		}
+
+		function startSound() {
+			instance = createjs.Sound.play(id);
+			control.onclick = pauseSound;
+			control.value = '一時停止';
+			instance.addEventListener('complete', resetSound);
+		}
+
+		function pauseSound(e) {
+			instance.paused = true;
+			control.onclick = middleStartSound;
+			control.value = '再生';
+		}
+
+		function middleStartSound() {
+			instance.play();
+			control.onclick = pauseSound;
+			control.value = '一時停止';
+			instance.addEventListener('complete', resetSound);
+		}
+
+		function resetSound(e) {
+			control.value = '再生';
+			control.onclick = startSound;
+		}
+
+	</script>
+</head>
+
+<body>
+	<input type="button" id="control" value="読み込み中">
+</body>
+
+</html>
